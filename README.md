@@ -18,32 +18,32 @@ backend API (PHP CodeIgniter 4).
 (Silakan ganti path screenshot dengan file Anda sendiri.)
 
 ### Login Page
+<img width="324" height="713" alt="Screenshot 2025-11-24 155758" src="https://github.com/user-attachments/assets/9c4d1b42-54a8-4303-b627-e18335938954" />
 
-![login](path_gambar_login)
+
 
 ### Register Page
+<img width="330" height="706" alt="Screenshot 2025-11-24 160158" src="https://github.com/user-attachments/assets/212d6beb-8058-4307-a5ee-9688df2241b8" />
 
-![register](path_gambar_register)
 
 ### Produk Page
+<img width="318" height="705" alt="Screenshot 2025-11-24 155809" src="https://github.com/user-attachments/assets/427db1b4-81df-408d-8a84-9696d06c24e9" />
 
-![produk_list](path_gambar_produk_list)
+
 
 ### Produk Detail
+<img width="332" height="710" alt="Screenshot 2025-11-24 160044" src="https://github.com/user-attachments/assets/c973378b-1aeb-4907-8350-256a2a4fe482" />
 
-![produk_detail](path_gambar_produk_detail)
+
 
 ### Produk Form
+<img width="328" height="707" alt="Screenshot 2025-11-24 155840" src="https://github.com/user-attachments/assets/cace9631-d07e-478f-bf49-583c9f806ce8" />
 
-![produk_form](path_gambar_produk_form)
-
-### Popup Success
-
-![success_popup](path_gambar_success)
 
 ### Popup Warning
+<img width="331" height="708" alt="Screenshot 2025-11-24 160127" src="https://github.com/user-attachments/assets/1ea9af7c-2c7f-40f6-96a0-fdd104da6a36" />
 
-![warning_popup](path_gambar_warning)
+
 
 ------------------------------------------------------------------------
 
