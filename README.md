@@ -1,16 +1,403 @@
-# tokokita
+# 🛒 TokoKita --- Flutter CRUD App
 
-A new Flutter project.
+Aplikasi Flutter sederhana untuk melakukan **CRUD Produk** dengan
+backend API (PHP CodeIgniter 4).
 
-## Getting Started
+## Nama : Revalina Fidiya Anugrah
 
-This project is a starting point for a Flutter application.
+## NIM : H1D023011
 
-A few resources to get you started if this is your first Flutter project:
+## Shift Praktikkum : B
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Shift KRS : D
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+------------------------------------------------------------------------
+
+# 📸 Screenshot Aplikasi
+
+(Silakan ganti path screenshot dengan file Anda sendiri.)
+
+### Login Page
+
+![login](path_gambar_login)
+
+### Register Page
+
+![register](path_gambar_register)
+
+### Produk Page
+
+![produk_list](path_gambar_produk_list)
+
+### Produk Detail
+
+![produk_detail](path_gambar_produk_detail)
+
+### Produk Form
+
+![produk_form](path_gambar_produk_form)
+
+### Popup Success
+
+![success_popup](path_gambar_success)
+
+### Popup Warning
+
+![warning_popup](path_gambar_warning)
+
+------------------------------------------------------------------------
+
+# 🔄 PROSES APLIKASI --- LANGKAH PER LANGKAH
+
+# 🔐 1. PROSES LOGIN
+
+## a. Mengisi Form Login
+
+![login](path_gambar_login)
+
+**Penjelasan:** - Pengguna mengisi email & password\
+- Form divalidasi (tidak boleh kosong)\
+- Jika valid → memanggil POST API login
+
+**Kode validasi form:**
+
+``` dart
+if (_formKey.currentState!.validate()) {
+  _submit();
+}
+```
+
+------------------------------------------------------------------------
+
+## b. Request API untuk Login
+
+**Kode Flutter memanggil LoginBloc:**
+
+``` dart
+LoginBloc.login(
+  email: _emailTextboxController.text,
+  password: _passwordTextboxController.text,
+).then((value) { ... });
+```
+
+**Kode di LoginBloc:**
+
+``` dart
+var response = await Api().post(ApiUrl.login, body);
+var jsonObj = json.decode(response.body);
+return Login.fromJson(jsonObj);
+```
+
+------------------------------------------------------------------------
+
+## c. Popup Sukses / Gagal
+
+### Popup Sukses
+
+![success_popup](path_gambar_success)
+
+``` dart
+SuccessDialog(
+  description: "Login berhasil",
+  okClick: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const ProdukPage()),
+    );
+  },
+);
+```
+
+### Popup Gagal
+
+![warning_popup](path_gambar_warning)
+
+``` dart
+WarningDialog(
+  description: "Login gagal, email atau password salah",
+);
+```
+
+**Menyimpan token setelah login:**
+
+``` dart
+UserInfo().setToken(data.token);
+```
+
+------------------------------------------------------------------------
+
+# 🧑‍💻 2. PROSES REGISTRASI
+
+## a. Mengisi Form Registrasi
+
+![register](path_gambar_register)
+
+Input terdiri dari: - Nama\
+- Email\
+- Password\
+- Konfirmasi Password
+
+**Contoh validasi password:**
+
+``` dart
+if (value!.length < 6) return "Password minimal 6 karakter";
+```
+
+------------------------------------------------------------------------
+
+## b. Request Registrasi ke API
+
+``` dart
+RegistrasiBloc.registrasi(
+  nama: _namaTextboxController.text,
+  email: _emailTextboxController.text,
+  password: _passwordTextboxController.text,
+);
+```
+
+**Di RegistrasiBloc:**
+
+``` dart
+var response = await Api().post(ApiUrl.registrasi, body);
+return Registrasi.fromJson(json.decode(response.body));
+```
+
+------------------------------------------------------------------------
+
+## c. Popup Registrasi
+
+Jika sukses:
+
+``` dart
+SuccessDialog(
+  description: "Registrasi berhasil, silahkan login",
+  okClick: () {
+    Navigator.pop(context);
+    Navigator.pop(context);
+  },
+);
+```
+
+Jika gagal:
+
+``` dart
+WarningDialog(description: "Registrasi gagal");
+```
+
+------------------------------------------------------------------------
+
+# 📦 3. MENAMPILKAN LIST PRODUK
+
+## a. Halaman List Produk
+
+![produk_list](path_gambar_produk_list)
+
+**Kode menampilkan FutureBuilder:**
+
+``` dart
+FutureBuilder<List<Produk>>(
+  future: ProdukBloc.getProduks(),
+  builder: (context, snapshot) { ... }
+);
+```
+
+**Mengambil data produk dari API:**
+
+``` dart
+var response = await Api().get(ApiUrl.listProduk);
+var jsonObj = json.decode(response.body);
+
+List<dynamic> listProduk = jsonObj['data'];
+```
+
+**Kode ListTile:**
+
+``` dart
+ListTile(
+  title: Text(produk.namaProduk!),
+  subtitle: Text("Rp ${produk.hargaProduk}"),
+  onTap: () => navigateToDetail(produk),
+);
+```
+
+------------------------------------------------------------------------
+
+# ➕ 4. PROSES MENAMBAH PRODUK
+
+## a. Form Tambah Produk
+
+![produk_form](path_gambar_produk_form)
+
+User mengisi: - Kode\
+- Nama\
+- Harga
+
+------------------------------------------------------------------------
+
+## b. Submit Data ke API
+
+``` dart
+ProdukBloc.addProduk(
+  produk: Produk(
+    kodeProduk: produk.kodeProduk,
+    namaProduk: produk.namaProduk,
+    hargaProduk: produk.hargaProduk,
+  ),
+);
+```
+
+**Di BLoC:**
+
+``` dart
+var response = await Api().post(ApiUrl.createProduk, body);
+var jsonObj = json.decode(response.body);
+return jsonObj['status'];
+```
+
+------------------------------------------------------------------------
+
+## c. Popup Sukses
+
+``` dart
+SuccessDialog(
+  description: "Produk berhasil ditambah",
+  okClick: () => Navigator.pop(context),
+);
+```
+
+------------------------------------------------------------------------
+
+# ✏️ 5. PROSES MENGEDIT PRODUK
+
+## a. Membuka Halaman Detail
+
+![produk_detail](path_gambar_produk_detail)
+
+Ada tombol: - EDIT\
+- DELETE
+
+------------------------------------------------------------------------
+
+## b. Form Edit Produk
+
+![produk_form_edit](path_gambar_produk_form_edit)
+
+------------------------------------------------------------------------
+
+## c. Request Update Produk
+
+``` dart
+ProdukBloc.updateProduk(
+  produk: produkYangDiupdate,
+);
+```
+
+**Di BLoC:**
+
+``` dart
+var response = await Api().put(ApiUrl.updateProduk(id), jsonEncode(body));
+```
+
+------------------------------------------------------------------------
+
+## d. Popup Sukses
+
+``` dart
+SuccessDialog(description: "Produk berhasil diperbarui");
+```
+
+------------------------------------------------------------------------
+
+# 🗑️ 6. PROSES MENGHAPUS PRODUK
+
+## a. Popup Konfirmasi Delete
+
+![confirm_delete](path_gambar_confirm_delete)
+
+``` dart
+AlertDialog(
+  title: Text("Yakin ingin menghapus data ini?")
+);
+```
+
+------------------------------------------------------------------------
+
+## b. Request DELETE
+
+``` dart
+ProdukBloc.deleteProduk(id: produk.id);
+```
+
+**Di BLoC:**
+
+``` dart
+var response = await Api().delete(ApiUrl.deleteProduk(id));
+```
+
+------------------------------------------------------------------------
+
+## c. Popup Sukses
+
+``` dart
+SuccessDialog(description: "Produk berhasil dihapus");
+```
+
+------------------------------------------------------------------------
+
+# 📁 Struktur Folder
+
+    lib/
+     ├── bloc/
+     │    ├── login_bloc.dart
+     │    ├── logout_bloc.dart
+     │    ├── produk_bloc.dart
+     │    └── registrasi_bloc.dart
+     ├── helpers/
+     │    ├── api.dart
+     │    ├── api_url.dart
+     │    ├── app_exception.dart
+     │    └── user_info.dart
+     ├── model/
+     │    ├── login.dart
+     │    ├── produk.dart
+     │    └── registrasi.dart
+     ├── ui/
+     │    ├── login_page.dart
+     │    ├── registrasi_page.dart
+     │    ├── produk_page.dart
+     │    ├── produk_form.dart
+     │    └── produk_detail.dart
+     ├── widget/
+     │    ├── success_dialog.dart
+     │    └── warning_dialog.dart
+     └── main.dart
+
+------------------------------------------------------------------------
+
+# 🔗 Backend API (CI4)
+
+-   POST /login\
+-   POST /registrasi\
+-   GET /produk\
+-   POST /produk\
+-   PUT /produk/{id}\
+-   DELETE /produk/{id}
+
+------------------------------------------------------------------------
+
+# 🚀 Cara Menjalankan
+
+## Flutter
+
+    flutter pub get
+    flutter run
+
+## Backend
+
+    php spark serve
+
+------------------------------------------------------------------------
+
+# ✨ Author
+
+**Revalina Fidiya Anugrah --- H1D023011**
